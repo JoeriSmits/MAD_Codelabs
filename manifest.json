@@ -1,6 +1,0 @@
-{
-  "name": "chatAppViewer",
-  "short_name": "chatAppViewer",
-  "start_url": "/",
-  "display": "standalone"
-}
