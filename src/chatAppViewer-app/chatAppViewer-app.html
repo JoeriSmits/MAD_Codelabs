@@ -1,0 +1,58 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymerfire/polymerfire.html">
+
+<dom-module id="chatAppViewer-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <firebase-app auth-domain="mad-research.firebaseapp.com"
+      database-url="https://mad-research.firebaseio.com"
+      api-key="AIzaSyAA6dYdqzRIcQc_JkqfoXDKeN3zJkw7JPI">
+    </firebase-app>
+
+    <firebase-document
+      path="/messages"
+      data="{{chatList}}">
+    </firebase-document>
+
+    <template is="dom-repeat" items="{{_toArray(chatList)}}">
+            name: <span>{{item.username}}</span>
+            <br> message: <span>{{item.message}}</span>
+            <br> timestamp: <span>{{item.timestamp}}</span>
+            <br>
+            <hr>
+    </template>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'chatAppViewer-app',
+
+      properties: {
+        firebaseRef: {
+          value: function() {
+            // return firebase.database().ref('messages/' + messageId);
+          },
+        },
+        chatList: {
+        }
+      },
+
+      _toArray: function(obj) {
+        return Object.keys(obj).map(function(key) {
+            return {
+                username: obj[key].username,
+                message: obj[key].message,
+                timestamp: obj[key].timestamp
+            };
+        });
+      }
+    });
+  </script>
+</dom-module>
