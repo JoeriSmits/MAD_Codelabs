@@ -7,6 +7,31 @@
       :host {
         display: block;
       }
+
+      .message {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto 1em auto;
+        background-color: white;
+        border-radius: 10px;
+        padding: 1em;
+        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+      }
+
+      .name {
+        font-size: 0.9em;
+        font-weight: bold;
+        color: deepskyblue;
+      }
+
+      .name, .messageTxt {
+        display: block;
+      }
+
+      .date {
+        font-size: 0.6em;
+        color: #AAA;
+      }
     </style>
 
     <firebase-app auth-domain="mad-research.firebaseapp.com"
@@ -20,11 +45,11 @@
     </firebase-document>
 
     <template is="dom-repeat" items="{{_toArray(chatList)}}">
-            name: <span>{{item.username}}</span>
-            <br> message: <span>{{item.message}}</span>
-            <br> timestamp: <span>{{item.timestamp}}</span>
-            <br>
-            <hr>
+      <div class="message">
+        <span class="name">{{item.username}}</span>
+        <span class="messageTxt">{{item.message}}</span>
+        <span class="date">{{item.timestamp}}</span>
+      </div>
     </template>
 
   </template>
@@ -41,6 +66,7 @@
           },
         },
         chatList: {
+          observer: '_scrollToBottomPage'
         }
       },
 
@@ -52,6 +78,12 @@
                 timestamp: obj[key].timestamp
             };
         });
+      },
+
+      _scrollToBottomPage: function() {
+        setTimeout(function(){ 
+          window.scrollTo(0,document.body.scrollHeight);
+        }, 30);
       }
     });
   </script>
