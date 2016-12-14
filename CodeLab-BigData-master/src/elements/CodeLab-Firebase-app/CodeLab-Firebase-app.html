@@ -1,0 +1,166 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/codelab-components/google-codelab.html">
+<link rel="import" href="../../../bower_components/codelab-components/google-codelab-step.html">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<dom-module id="CodeLab-Firebase-app">
+<template>
+    <style>
+    :host {
+        display: block;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    aside {
+        border-color: #6a6;
+        background: #ded;
+        color: #464;
+    }
+
+    aside.danger {
+        border-color: #aa6666;
+        background: #eedddd;
+        color: #664444;
+    }
+
+    ol, ul {
+        margin: 2em 0;
+    }
+
+    #moveIcon {
+        transform: rotate(180deg);
+    }
+
+    </style>
+
+    <google-codelab title="CodeLab: Chatapplicatie met Firebase"
+                    last-updated="2016-12-07">
+        <google-codelab-step label="Maak een keuze | iOS vs Android" step="1" duration="2">
+            Nu we het einde van de minor bereikt hebben, weet iedereen hoe je een app bouwt.
+            Iedereen gaat nu een chat applicatie bouwen met behulp van firebase, zodat we straks één applicatie hebben waarin iedereen kan chatten.
+            Dat kan in iOS of in android.
+            <a href="#"><i class="fa fa-apple" aria-hidden="true"></i> Volg de codelab in iOS</a>
+            <a href="#!"><i class="fa fa-android" aria-hidden="true"></i> Volg de codelab in Android</a>
+
+        </google-codelab-step>
+
+        <google-codelab-step label="Firebase installeren binnen Xcode" step="2" duration="8">
+            Om met firebase te kunnen werken heb je een pod nodig. Die kun je installeren door de volgende stappen te volgen:
+            <ol>
+                <li>Maak een nieuw xcode project</li>
+
+                Om de pod te installeren:
+                <li>Open de terminal</li>
+                <li>Ga naar je project root met behulp van het cd command</li>
+                <li>Type het command “pod init”</li>
+                <li>Als dit foutgaat, heb je nog geen pods geinstalleerd. Doe dit met behulp van commando "sudo gem install cocoapods". Dit duurt even</li>
+                <li>Laat de terminal open en open xcode, daar staat nu een pod file</li>
+                <li>Open deze pod file</li>
+                <li>Zorg dat de pod file er zo uit komt te zien:</li>
+                <p><pre><code><span>
+target 'MAD_Research' do
+  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for MAD_Research
+  pod 'Firebase/Core'
+  pod 'Firebase/Database'
+end
+            </span></code></pre></p>
+                <li>Sluit het project</li>
+                <li>Command “pod install” in de terminal</li>
+                <li>Download de file GoogleService-info.plist van https://s3.eu-central-1.amazonaws.com/mad-codelab/GoogleService-Info+(2).plist - normaal maak je deze aan aan de hand van je firebase database. Deze is gekoppeld aan onze Firebase database</li>
+                <li>Plaats deze file is project root</li>
+                <li>Open nu je project met de .xcworkspace extentie<strong> niet de normale xcode file </strong></li>
+            </ol>
+            Firebase is nu geïnstalleerd
+
+        </google-codelab-step>
+
+        <google-codelab-step label="Firebase installeren binnen Xcode" step="3" duration="2">
+
+            Je kunt nu je app gaan inrichten.
+            <ul>
+                <li>Maak een Message class met publieke variabelen timestamp, username en message. (Strings)</li>
+                <li>Maar een variabel genaamd 'myName' met daarin je eigen naam</li>
+                <li>Maak een constructor waarin deze variablen worden geinitialiseerd</li>
+                <li>Maak een user interface voor je app. Er moet een tableview in zitten om berichten te laten zien en een tekstbalk om berichten in te typen</li>
+                <li>Het is aan te raden een navigation controller te gebruiken</li>
+                <li>Koppel je outlets aan je code. Noem je textfield 'textField'</li>
+                <li>Om je textField te kunnen bedienen met de return knop op het toetsenbord kun je de volgende code gebruiken. Deze code compileert pas als je firebase hebt geconfigureerd.</li>
+
+                <p><pre><code><span>
+                func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+                let date = NSDate()
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                let dateString = dateFormatter.string(from: date as Date)
+                if textField.text != nil {
+                let message: [String:String] = ["timestamp": dateString, "username": self.myName, "message": textField.text!]
+                self.ref.childByAutoId().setValue(message)
+                }
+                self.tableView.reloadData()
+                return true
+                }⁠
+                </span></code></pre></p>
+
+                Om firebase te configureren:
+                <li>Voeg FIRApp.configure() toe aan de appdelegate functie 'application' en import Firebase</li>
+                <li>Import firebaseDatabase in je viewcontroller</li>
+                <li>Om met de externe firebase database te communiceren is er een referentie nodig.</li>
+                <li>Maak een var genaamd 'ref' van type FIRDatabaseReference!</li>
+                <p><pre><code><span>
+                let ref = FIRDatabase.database().reference()
+            </span></code></pre></p>
+                <li>Firebase stuurt een notification wanneer er een update beschikbaar is. Om hiernaar te luisteren zet je een observer in de view did load</li>
+
+                <p><pre><code><span>
+                 ref.observe(.value, with: { snapshot in
+            self.messages.removeAll();
+            //print(snapshot)
+            for child in snapshot.children
+            {
+                let childSnapshot = child as! FIRDataSnapshot
+                let messageSnapshot = snapshot.childSnapshot(forPath: childSnapshot.key)
+                let messageData = messageSnapshot.value as! NSDictionary
+                let time = messageData.value(forKey: "timestamp") as? String
+                let user = messageData.value(forKey: "username") as? String
+                let messageString = messageData.value(forKey: "message") as? String
+                if (time != nil), (user != nil), (messageString != nil) {
+                    let messageToInsert = Message(timestamp: time!, username: user!, message: messageString!)
+                    self.messages.append([messageToInsert])
+                }
+            }
+            self.tableView.reloadData()
+            self.tableView.tableViewScrollToBottom(animated: true)
+
+        })
+            </span></code></pre></p>
+
+
+            </ul>
+            Er wordt nu lokaal een message gemaakt in deze clojure elke keer als de online database wordt geupdate.
+            Zorg ervoor dat op dat moment ook je userinterface wordt geupdate om dit weer te geven.
+            Om zelf een bericht te versturen, hoef je deze alleen op te slaan in de online database.
+            Je schrijft naar de database met de volgende regel.
+            <p><pre><code><span>
+
+                self.ref.child("message").childByAutoId().setValue(MESSAGE_OBJECT)
+                //Pas ‘MESSAGE_OBJECT’ aan naar een eigen referentie naar een bericht
+            </span></code></pre></p>
+
+        </google-codelab-step>
+
+
+
+
+    </google-codelab>
+
+</template>
+
+<script>
+Polymer({
+    is: 'CodeLab-Firebase-app'
+});
+</script>
+</dom-module>
