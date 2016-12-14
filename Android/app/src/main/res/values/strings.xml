@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">Firebase codelab</string>
+    <string name="app_name">Firebase Android Codelab</string>
     <string name="action_settings">Settings</string>
+    <string name="sender_name">"@"%1$s</string>
+    <string name="sender">\@</string>
+    <string name="send">Send</string>
 </resources>

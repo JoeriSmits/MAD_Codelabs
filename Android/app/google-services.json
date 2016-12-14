@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:286922477138:android:b4afd2d51a1ba57a",
+        "mobilesdk_app_id": "1:286922477138:android:899ebaaa7ceaadd5",
         "android_client_info": {
-          "package_name": "research.mad.han.robaben.nl.firebasecodelab"
+          "package_name": "nl.han.ica.mad.android.firebasedemo"
         }
       },
       "oauth_client": [
