@@ -1,0 +1,67 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/codelab-components/google-codelab.html">
+<link rel="import" href="../../../bower_components/codelab-components/google-codelab-step.html">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<dom-module id="CodeLab-Firebase-app">
+<template>
+    <style>
+    :host {
+        display: block;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    aside {
+        border-color: #6a6;
+        background: #ded;
+        color: #464;
+    }
+
+    aside.danger {
+        border-color: #aa6666;
+        background: #eedddd;
+        color: #664444;
+    }
+
+    ol, ul {
+        margin: 2em 0;
+    }
+
+    #moveIcon {
+        transform: rotate(180deg);
+    }
+
+    google-codelab::content .donebutton {
+      display: none;
+    }
+    </style>
+
+    <google-codelab title="CodeLab: Chatapplicatie met Firebase"
+      last-updated="2016-12-07">
+      <google-codelab-step label="Maak een keuze | iOS vs Android" step="1" duration="3">
+        <img src="/images/Firebase-logo.png" style="float: right; max-width: 150px"/>
+        <p>Een beetje online marketeer weet dat Google Analytics de makkelijkste manier is om websitegebruik in kaart te brengen. Voor apps ontbrak het aan een dergelijk krachtige tool… totdat Google het nieuwe Firebase lanceerde!</p>
+        <blockquote cite="https://www.searchresult.nl/blog/web-analytics/wat-is-firebase/">
+          Firebase ‘real-time cloud data service’ is volgens Google de nieuwe standaard in app life cycle management, voor zowel developers als online marketeers.
+        </blockquote>
+        <p>Grote namen als Shazam en Booking.com gebruiken op dit moment al Firebase. En vrijwel dagelijks worden er nog Google videotutorials en documentaties gepubliceerd om alle functies van Firebase uit te leggen en onderbouwen.</p>
+        <p>Firebase biedt eenvoudige tools voor analytics, realtime messaging, monitoring, data-opslag, data-hosting, remote beheer, een testomgeving, gebruiker-authenticatie en integratiemogelijkeden voor monetizing platformen als AdMob.</p>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/O17OWyx08Cg" frameborder="0" allowfullscreen></iframe>
+        <img src="/images/chatapplicatie.png" style="float: left; max-width: 300px; margin-top: 3em"/>
+        <p>In deze codelab ga je de real-time database van Firebase gebruiken. Je gaat de client voor een chatapplicatie maken. <strong>Deze codelab kan zowel in Android als in iOS worden gevolgd.</strong> Het resultaat van deze codelab is dat alle deelnemers zometeen berichten kunnen versturen naar de andere gebruikers.</p>
+        <a href="#!"><i class="fa fa-apple" aria-hidden="true"></i> Volg de codelab in iOS</a>
+        <a href="#!"><i class="fa fa-android" aria-hidden="true"></i> Volg de codelab in Android</a>
+
+        <p>&nbsp;</p>
+        <small><a href="https://www.searchresult.nl/blog/web-analytics/wat-is-firebase/">https://www.searchresult.nl/blog/web-analytics/wat-is-firebase/</a></small>
+      </google-codelab-step>
+    </google-codelab>
+
+</template>
+
+<script>
+Polymer({
+    is: 'CodeLab-Firebase-app'
+});
+</script>
+</dom-module>

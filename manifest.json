@@ -1,0 +1,7 @@
+{
+  "name": "CodeLab-Big-Data",
+  "short_name": "CodeLab-Big-Data",
+  "description": "CodeLab Big Data for the Big Data Project",
+  "start_url": "/",
+  "display": "standalone"
+}
