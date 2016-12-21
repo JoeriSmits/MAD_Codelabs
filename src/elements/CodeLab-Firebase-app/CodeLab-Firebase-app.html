@@ -91,11 +91,11 @@ dependencies {
 apply plugin: 'com.google.gms.google-services'</span></code></pre>
                     </p>
                     <li><i>Als je het automatisch synchronizeren van je project met de gradle configuraties uit hebt staan, dan moet je dit handmatig doen door de "Sync project with Gradle files" knop in te drukken.</i></li>
-<p><img src="http://i.imgur.com/ve5JYNx.png" alt="Sync project with Gradle files"/></p>
-<p><i>Kan je de knop niet vinden? Gebruikt ctrl-shift-a om het commando interface te openen en typ "Sync project with Gradle files".</i></p>
-                        <li>Gebruik vervolgens de voorbereidde firebase configuratie (<a href="https://s3.eu-central-1.amazonaws.com/mad-codelab/google-services.json">download</a>)
-                            en voeg deze toe aan de "app" map van je nieuwe project</li>
-                        <p><img src="http://i.imgur.com/6JRYG0E.png" alt="Installatieinstructies" /></p>
+                    <p><img src="http://i.imgur.com/ve5JYNx.png" alt="Sync project with Gradle files" /></p>
+                    <p><i>Kan je de knop niet vinden? Gebruikt ctrl-shift-a om het commando interface te openen en typ "Sync project with Gradle files".</i></p>
+                    <li>Gebruik vervolgens de voorbereidde firebase configuratie (<a href="https://s3.eu-central-1.amazonaws.com/mad-codelab/google-services.json">download</a>)
+                        en voeg deze toe aan de "app" map van je nieuwe project</li>
+                    <p><img src="http://i.imgur.com/6JRYG0E.png" alt="Installatieinstructies" /></p>
                 </ol>
                 Firebase is nu geïnstalleerd!
             </google-codelab-step>
@@ -108,8 +108,8 @@ apply plugin: 'com.google.gms.google-services'</span></code></pre>
                         message en timestamp. Om wat makkelijker met deze data om te gaan maken we een Message object aan
                         die deze velden bevat. Al deze velden worden opgeslagen als een String.</li>
                     <li>Geef het nieuwe Message object een constructor waarmee je de sender, message en timestamp set.</li>
-                    <li>Nu is het tijd om je activity in te richten. Voor het gemak wordt de layout <a href="http://pastebin.com/dkfzibyp">aangeleverd</a>. Deze kun je
-                        vervolgens in de <i>#onCreate()</i> als layout instellen (hint: <i>#setContentView()</i>).</li>
+                    <li>Nu is het tijd om je activity in te richten. Voor het gemak wordt de layout <a href="http://pastebin.com/dkfzibyp">aangeleverd</a>.
+                        Deze kun je vervolgens in de <i>#onCreate()</i> als layout instellen (hint: <i>#setContentView()</i>).</li>
                     <li>Voor het weergeven van de messages wordt dus een <a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html">RecyclerView</a>                        gebruikt. RecyclerView is de efficiëntste implementatie van een ListView. Voor deze RecyclerView
                         wordt een Adapter aangeleverd.</li>
                     <p>
