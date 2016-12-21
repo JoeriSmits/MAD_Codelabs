@@ -54,7 +54,8 @@
                 <br/> Firebase toevoegen aan een Android Studio project is relatief simpel. Om met firebase te kunnen werken
                 heb je een pod nodig. Die kun je installeren door de volgende stappen te volgen:
                 <ol>
-                    <li>Maak een nieuw Android Studio project aan.</li>
+                    <li>Maak een nieuw Android Studio project aan (wij hebben voor de package "nl.han.ica.mad.android.firebasedemo"
+                        gekozen). We gaan RecyclerViews gebruiken, dus kies voor een minimum API level van 23.</li>
                     <li>Open de root build.gradle (deze staat in Android Studio gemarkeerd als <i>Project: Android</i>) en voeg
                         de google-services plugin toe aan je project:</li>
                     <p>
@@ -89,7 +90,7 @@ dependencies {
 // ADD THIS AT THE BOTTOM
 apply plugin: 'com.google.gms.google-services'</span></code></pre>
                     </p>
-                    <li><i>Als je het automatisch synchronizeren van je project met de gradle configuraties uit hebt staan, dan moet je dit handmatig doen door de "Sync project with Gradle files" knop in te drukken.</li>
+                    <li><i>Als je het automatisch synchronizeren van je project met de gradle configuraties uit hebt staan, dan moet je dit handmatig doen door de "Sync project with Gradle files" knop in te drukken.</i></li>
 <p><img src="http://i.imgur.com/ve5JYNx.png" alt="Sync project with Gradle files"/></p>
 <p><i>Kan je de knop niet vinden? Gebruikt ctrl-shift-a om het commando interface te openen en typ "Sync project with Gradle files".</i></p>
                         <li>Gebruik vervolgens de voorbereidde firebase configuratie (<a href="https://s3.eu-central-1.amazonaws.com/mad-codelab/google-services.json">download</a>)
@@ -98,8 +99,7 @@ apply plugin: 'com.google.gms.google-services'</span></code></pre>
                 </ol>
                 Firebase is nu geïnstalleerd!
             </google-codelab-step>
-
-            <google-codelab-step label="Firebase gebruiken in je nieuwe project" step="3" duration="8">
+            <google-codelab-step label="Firebase gebruiken in je Android project" step="3" duration="15">
                 Nu je Firebase succesvol hebt geinstalleerd is het tijd om de chatapplicatie te gaan maken. Om te voorkomen dat het te lang
                 duurt om te codelab te volgen worden sommige delen code aangeleverd.
                 <ol>
@@ -108,42 +108,159 @@ apply plugin: 'com.google.gms.google-services'</span></code></pre>
                         message en timestamp. Om wat makkelijker met deze data om te gaan maken we een Message object aan
                         die deze velden bevat. Al deze velden worden opgeslagen als een String.</li>
                     <li>Geef het nieuwe Message object een constructor waarmee je de sender, message en timestamp set.</li>
-                    <li>Nu is het tijd om je activity in te richten. Voor het gemak wordt de layout aangeleverd. Deze kun je
+                    <li>Nu is het tijd om je activity in te richten. Voor het gemak wordt de layout <a href="http://pastebin.com/dkfzibyp">aangeleverd</a>. Deze kun je
                         vervolgens in de <i>#onCreate()</i> als layout instellen (hint: <i>#setContentView()</i>).</li>
+                    <li>Voor het weergeven van de messages wordt dus een <a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html">RecyclerView</a>                        gebruikt. RecyclerView is de efficiëntste implementatie van een ListView. Voor deze RecyclerView
+                        wordt een Adapter aangeleverd.</li>
+                    <p>
+                        <pre><code><span>
+import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.List;
+
+import nl.han.ica.mad.android.firebasedemo.model.Message;
+
+/**
+ * Provides a RecyclerView Adapter to display messages fetched from the FireBase reference.
+ */
+public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
+
+    private List<Message> messages;
+    private String currentUser;
+    private Context context;
+
+    /**
+     * Constructor to instantiate a new MessageAdapter.
+     *
+     * @param messages The list of messages fetched by the {@link com.google.firebase.database.DatabaseReference FireBase database reference}
+     * @param currentUser The current logged in user
+     * @param context The context of this MessageAdapter (i.e. {@link nl.han.ica.mad.android.firebasedemo.MainActivity})
+     */
+    MessageAdapter(List<Message> messages, String currentUser, Context context) {
+        this.context = context;
+        this.messages = messages;
+        this.currentUser = currentUser;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View messageView = inflater.inflate(R.layout.single_message, parent, false);
+        return new ViewHolder(messageView);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        Message message = messages.get(position);
+        holder.username.setText(String.format(context.getResources().getString(R.string.sender_name), message.username));
+        holder.message.setText(message.message);
+
+        if (currentUser.equals(message.username)) {
+            holder.container.setBackgroundColor(context.getColor(R.color.messageBackgroundUser));
+            holder.wrapper.setGravity(Gravity.END);
+        } else {
+            holder.container.setBackgroundColor(context.getColor(R.color.messageBackground));
+            holder.wrapper.setGravity(Gravity.START);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return messages.size();
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView message;
+        TextView username;
+        LinearLayout container;
+        LinearLayout wrapper;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            message = (TextView) itemView.findViewById(R.id.message);
+            username = (TextView) itemView.findViewById(R.id.username);
+            container = (LinearLayout) itemView.findViewById(R.id.messageContainer);
+            wrapper = (LinearLayout) itemView.findViewById(R.id.messageWrapper);
+        }
+    }
+}
+                        </span></code></pre>
+                    </p>
+                    <li>Declareer in je Activity vijf velden: een String username met je naam (dus <code>String username = "JouwNaam";</code>),
+                        een RecyclerView, een DatabaseReference, een List
+                        <Message> en een MessageAdapter. Dit moeten klasse-variabelen zijn, omdat je ze in de <i>#onDestroy()</i> wil
+                            opruimen voor de garbage collection.</li>
+                    <li>De volgende stappen moeten allemaal in de <i>#onCreate()</i> uitgevoerd worden. Set de DatabaseReference
+                        met <code>databaseReference = FirebaseDatabase.getInstance().getReference("messages");</code>
+                        <li>Voeg nu een referentie toe naar het RecyclerView veld (hint: <i>#findViewById(int)</i>)</li>
+                        <li>Omdat de databases worden opgeslagen van oud-tot-nieuw is het nodig om de RecyclerView de berichten
+                            omgekeerd te laten weergeven (anders zou je dus oude berichten onderaan zien). Dat kan met behulp
+                            van de volgende code:</li>
+                        <p>
+                            <pre><code><span>
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
+                                </span></code></pre>
+                        </p>
+                        <li>Maak nu een nieuwe instantie van de MessageAdapter aan. De constructor vraagt om de List
+                            <string>, de username, en de context (gebruik hiervoor gewoon <code>this</code>).</li>
+                        <li>Set de adapter van de RecyclerView naar de MessageAdapter die je zojuist hebt aangemaakt.</li>
+                        <li>Wat we nu moeten doen is toevoegen van functionaliteit om berichten te versturen. Maak een referentie
+                            naar de sendMessageButton en voeg hieraan een onClickListener toe die de volgende code uitvoert:</li>
+                        <p>
+                            <pre><code><span>
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Message messageToSend = new Message(format.format(new Date()), username, messageEditText.getText().toString());
+        DatabaseReference uniqueRef = messages.push();
+        uniqueRef.setValue(messageToSend);
+        messageEditText.setText("");
+                                    </span></code></pre>
+                        </p>
+                        <li>Firebase stuurt notificaties naar je DatabaseReference wanneer er een update is (denk hierbij aan
+                            nieuwe berichten). Deze kun je vervolgens automatisch herladen in je RecyclerView met behulp
+                            van een ValueEventListener. Declareer een ValueEventListener als klasse variabel (zodat je de
+                            listener in <i>#onDestroy()</i> weer kunt removen van de reference).</li>
+                        <p>
+                            <pre><code><span>
+    private ValueEventListener listener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            messagesList.clear();
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                String timestamp = (String) snapshot.child("timestamp").getValue();
+                String name = (String) snapshot.child("username").getValue();
+                String message = (String) snapshot.child("message").getValue();
+                Message receivedMessage = new Message(timestamp, name, message);
+                messagesList.add(receivedMessage);
+            }
+            adapter.notifyDataSetChanged();
+            recyclerView.scrollToPosition(adapter.getItemCount() + 1);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError error) {
+            Log.w(this.getClass().getName(), "Failed to read value.", error.toException());
+        }
+    };
+                                    </span></code></pre>
+                            <p>
+                                <li>Ten slotte gaan we in de <i>#onDestroy()</i> nog even netjes opruimen. Zet de referenties
+                                    naar de RecyclerView en Adapter naar <code>null</code>, en verwijder de listener die
+                                    je aan de DatabaseReference hebt toegevoegd (hint: <i>databaseReference#removeListener(ValueEventListener)</i>).</li>
+                                <li>Start nu je applicatie en begin met chatten!</li>
                 </ol>
-                <p>
-                    <pre><code><span>
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/background">
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:stackFromEnd="true"
-        android:layout_weight="1"
-        android:id="@+id/messagesRecyclerView">
-    </android.support.v7.widget.RecyclerView>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:id="@+id/messageTextField"
-            android:layout_height="wrap_content" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/sendMessageButton"
-            android:text="@string/send"/>
-    </LinearLayout>
-</LinearLayout>
-                        </pre></code></span>
-                </p>
             </google-codelab-step>
         </google-codelab>
 
