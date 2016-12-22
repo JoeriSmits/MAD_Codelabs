@@ -57,7 +57,7 @@
                 <li>Laat de terminal open en open xcode, daar staat nu een pod file</li>
                 <li>Open deze pod file</li>
                 <li>Zorg dat de pod file er zo uit komt te zien:</li>
-                <p><pre><code><span>
+                <li><p><pre><code><span>
 target 'MAD_Research' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
@@ -66,7 +66,7 @@ target 'MAD_Research' do
   pod 'Firebase/Core'
   pod 'Firebase/Database'
 end
-            </span></code></pre></p>
+            </span></code></pre></p></li>
                 <li>Sluit het project</li>
                 <li>Command “pod install” in de terminal</li>
                 <li>Download de file GoogleService-info.plist van https://s3.eu-central-1.amazonaws.com/mad-codelab/GoogleService-Info+(2).plist - normaal maak je deze aan aan de hand van je firebase database. Deze is gekoppeld aan onze Firebase database</li>
@@ -79,7 +79,9 @@ end
 
         <google-codelab-step label="Het begin van je chat app" step="3" duration="5">
 
-            Je kunt nu je app gaan inrichten.
+            <p>
+              Je kunt nu je app gaan inrichten.
+            </p>
             <ul>
                 <li>Maak een Message class met publieke variabelen timestamp, username en message. (Strings)</li>
                 <li>Maar een variabel genaamd 'myName' met daarin je eigen naam</li>
@@ -88,7 +90,7 @@ end
                 <li>Het is aan te raden een navigation controller te gebruiken</li>
                 <li>Koppel je outlets aan je code. Noem je textfield 'textField'</li>
                 <li>Om je textField te kunnen bedienen met de return knop op het toetsenbord kun je de volgende code gebruiken. Deze code compileert pas als je firebase hebt geconfigureerd.</li>
-
+            </ul>
                 <p><pre><code><span>
                 func textFieldShouldReturn(_ textField: UITextField) -> Bool {
                 let date = NSDate()
@@ -107,17 +109,20 @@ end
         </google-codelab-step>
 
         <google-codelab-step label="Firebase configureren" step="4" duration="5">
-                Om firebase te configureren:
+              <p>Om firebase te configureren:</p>
+              <ul>
                 <li>Voeg FIRApp.configure() toe aan de appdelegate functie 'application' en import Firebase</li>
                 <li>Import firebaseDatabase in je viewcontroller</li>
                 <li>Om met de externe firebase database te communiceren is er een referentie nodig.</li>
                 <li>Maak een globale var genaamd 'ref' van type FIRDatabaseReference!</li>
-                <p><pre><code><span>
-                let ref = FIRDatabase.database().reference()
-            </span></code></pre></p>
+              </ul>
+              <p><pre><code><span>
+              let ref = FIRDatabase.database().reference()
+              </span></code></pre></p>
+              <ul>
                 <li>Firebase stuurt een notification wanneer er een update beschikbaar is. Om hiernaar te luisteren zet je een observer in de view did load</li>
-
-                <p><pre><code><span>
+              </ul>
+              <p><pre><code><span>
                 // ref.observe observes the database and will be excecuted if there is new data available
         ref.observe(.value, with: { snapshot in
             self.messages.removeAll();
@@ -152,10 +157,10 @@ end
         })
             </span></code></pre></p>
 
-
-            </ul>
+          <p>
             Er wordt nu lokaal een message gemaakt in deze clojure elke keer als de online database wordt geupdate.
             Zorg ervoor dat op dat moment ook je userinterface wordt geupdate om dit weer te geven.
+          </p>
 
         </google-codelab-step>
 
@@ -170,10 +175,6 @@ end
             </span></code></pre></p>
 
         </google-codelab-step>
-
-
-
-
     </google-codelab>
 
 </template>
