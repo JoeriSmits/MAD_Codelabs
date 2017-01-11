@@ -10,52 +10,45 @@
                 display: block;
                 font-family: 'Open Sans', sans-serif;
             }
-            
+
             aside {
                 border-color: #6a6;
                 background: #ded;
                 color: #464;
             }
-            
+
             aside.danger {
                 border-color: #aa6666;
                 background: #eedddd;
                 color: #664444;
             }
-            
+
             ol,
             ul {
                 margin: 2em 0;
             }
-            
+
             #moveIcon {
                 transform: rotate(180deg);
             }
-            
+
             google-codelab::content .donebutton {
                 display: none;
             }
         </style>
 
-        <google-codelab title="Android CodeLab: Chatapplicatie met Firebase" last-updated="2016-12-14">
-            <google-codelab-step label="Maak een keuze | iOS vs Android" step="1" duration="2">
-                Nu we het einde van de minor bereikt hebben, weet iedereen hoe je een app bouwt. Iedereen gaat nu een chat applicatie bouwen
-                met behulp van firebase, zodat we straks één applicatie hebben waarin iedereen kan chatten. Dat kan in iOS
-                of in android.
-                <a href="#"><i class="fa fa-apple" aria-hidden="true"></i> Volg de codelab in iOS</a>
-                <a href="#!"><i class="fa fa-android" aria-hidden="true"></i> Volg de codelab in Android</a>
-
-            </google-codelab-step>
-
-            <google-codelab-step label="Firebase installeren binnen Android Studio" step="2" duration="8">
-                <b>Deze codelab is geschreven voor Android Studio versie 1.5 en hoger.</b>
-                <br/>
-                <b>Voor deze codelab is al een Firebase applicatie aangemaakt in de Firebase console, dit hoef je dus niet zelf te doen!</b>
-                <br/>
-                <ol>
-                    <li>Maak een nieuw Android Studio project aan (wij hebben voor de package "nl.han.ica.mad.android.firebasedemo"
-                        gekozen). We gaan RecyclerViews gebruiken, dus kies voor een minimum API level van 23.</li>
-                    <li>Open de root build.gradle (deze staat in Android Studio gemarkeerd als <i>Project: Android</i>) en voeg
+        <google-codelab title="Android CodeLab: Chatapplicatie met Firebase" last-updated="2017-01-11">
+            <google-codelab-step label="Firebase installeren" step="1" duration="8">
+              <aside>
+                <p>
+                  Deze codelab is geschreven voor Android Studio <strong>versie 1.5</strong> en hoger.
+                  Voor deze codelab is al een Firebase applicatie aangemaakt in de Firebase console, <strong>dit hoef je dus niet zelf te doen!</strong>
+                </p>
+              </aside>
+                  <ol>
+                    <li>Maak een nieuw Android Studio project aan (gebruik de volgende package identifier: <code>nl.han.ica.mad.android.firebasedemo</code>).</li>
+                    <li>We gaan <a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html" target="_blank">RecyclerViews</a> gebruiken, dus <strong>kies voor een minimum API level van 23.</strong></li>
+                    <li>Open de root <code>build.gradle</code> (deze staat in Android Studio gemarkeerd als <i>Project: Android</i>) en voeg
                         de google-services plugin toe aan je project:</li>
                     <p>
                         <pre><code><span>
@@ -68,7 +61,7 @@ buildscript {
 }
             </span></code></pre>
                     </p>
-                    <li>Voeg vervolgens de Firebase library toe aan de project build.gradle (deze staat in Android Studio gemarkeerd
+                    <li>Voeg vervolgens de Firebase library toe aan de project <code>build.gradle</code> (deze staat in Android Studio gemarkeerd
                         als <i>Module: app</i>)</li>
                     <p>
                         <pre><code><span>
@@ -81,7 +74,7 @@ android {
 dependencies {
   // ...
   compile 'com.google.firebase:firebase-core:10.0.1'
-  
+
   // Getting a "Could not find" error? Make sure you have
   // the latest Google Repository in the Android SDK manager
 }
@@ -89,30 +82,48 @@ dependencies {
 // ADD THIS AT THE BOTTOM
 apply plugin: 'com.google.gms.google-services'</span></code></pre>
                     </p>
-                    <li><i>Als je het automatisch synchronizeren van je project met de gradle configuraties uit hebt staan, dan moet je dit handmatig doen door de "Sync project with Gradle files" knop in te drukken.</i></li>
+                    <aside>
+                      <p>
+                        Als je het automatisch synchronizeren van je project met de gradle configuraties uit hebt staan, dan moet je dit handmatig doen door de <strong>"Sync project with Gradle files"</strong> knop in te drukken.
+                      </p>
+                    </aside>
                     <p><img src="http://i.imgur.com/ve5JYNx.png" alt="Sync project with Gradle files" /></p>
-                    <p><i>Kan je de knop niet vinden? Gebruikt ctrl-shift-a om het commando interface te openen en typ "Sync project with Gradle files".</i></p>
+                    <p><i>Protip: Kan je de knop niet vinden? Gebruikt</i> <code>ctrl-shift-a</code> <i>om het commando interface te openen en typ "Sync project with Gradle files".</i></p>
                     <li>Gebruik vervolgens de voorbereidde firebase configuratie (<a href="https://s3.eu-central-1.amazonaws.com/mad-codelab/google-services.json">download</a>)
-                        en voeg deze toe aan de "app" map van je nieuwe project</li>
+                        en voeg deze toe aan de <code>app</code> map van je nieuwe project</li>
                     <p><img src="http://i.imgur.com/6JRYG0E.png" alt="Installatieinstructies" /></p>
                 </ol>
-                Firebase is nu geïnstalleerd!
+                <strong>Firebase is nu geïnstalleerd! 🎉 🙌</strong>
             </google-codelab-step>
-            <google-codelab-step label="Firebase gebruiken in je Android project" step="3" duration="15">
+            <google-codelab-step label="Het message object" step="2" duration="3">
                 Nu je Firebase succesvol hebt geinstalleerd is het tijd om de chatapplicatie te gaan maken. Om te voorkomen dat het te lang
                 duurt om te codelab te volgen worden sommige delen code aangeleverd.
                 <ol>
                     <li>Indien dit niet automatisch is gebeurd, voeg een lege activity toe aan je project.</li>
-                    <li>De Firebase database bevat een lijst van berichten die uit drie onderdelen bestaat, namelijk: de sender,
-                        message en timestamp. Om wat makkelijker met deze data om te gaan maken we een Message object aan
-                        die deze velden bevat. Al deze velden worden opgeslagen als een String.</li>
-                    <li>Geef het nieuwe Message object een constructor waarmee je de sender, message en timestamp set.</li>
+                    <aside>
+                      <p>
+                        De Firebase database bevat een lijst van berichten die uit drie onderdelen bestaat, namelijk: de sender,
+                        message en timestamp. Om wat makkelijker met deze data om te gaan maken we een message object aan
+                        die deze velden bevat. <strong>Al deze velden worden opgeslagen als een String</strong>.
+                      </p>
+                    </aside>
+                    <li>Maak een message object aan</li>
+                    <li>Geef het nieuwe message object een constructor waarmee je de sender, message en timestamp set.</li>
+                  </ol>
+            </google-codelab-step>
+            <google-codelab-step label="Richt de activity in" step="3" duration="8">
+                <ol>
                     <li>Nu is het tijd om je activity in te richten. Voor het gemak wordt de layout <a href="http://pastebin.com/dkfzibyp">aangeleverd</a>.
-                        Deze kun je vervolgens in de <i>#onCreate()</i> als layout instellen (hint: <i>#setContentView()</i>).</li>
-                    <li>Voor het weergeven van de messages wordt dus een <a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html">RecyclerView</a>                        gebruikt. RecyclerView is de efficiëntste implementatie van een ListView. Voor deze RecyclerView
-                        wordt een Adapter aangeleverd.</li>
+                        Deze kun je vervolgens in de <code>onCreate()</code> als layout instellen (hint: <code>setContentView()</code>).</li>
+                    <li>Vul <code>app/src/main/res/values/colors.xml</code> aan met de <a href="http://pastebin.com/9Ne9WXFH" target="_blank">volgende kleuren.</a></li>
+                    <aside>
+                      <p>
+                        Voor het weergeven van de messages wordt een RecyclerView gebruikt. RecyclerView is de efficiëntste implementatie van een ListView.
+                      </p>
+                    </aside>
+                    <li>Voor deze RecyclerView wordt de volgende Adapter aangeleverd.</li>
                     <p>
-                        <pre><code><span>
+                    <pre><code><span>
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -194,72 +205,92 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
     }
 }
-                        </span></code></pre>
+                    </span></code></pre>
                     </p>
                     <li>Declareer in je Activity vijf velden: een String username met je naam (dus <code>String username = "JouwNaam";</code>),
                         een RecyclerView, een DatabaseReference, een List
-                        <Message> en een MessageAdapter. Dit moeten klasse-variabelen zijn, omdat je ze in de <i>#onDestroy()</i> wil
+                        <Message> en een MessageAdapter. Dit moeten klasse-variabelen zijn, omdat je ze in de <code>onDestroy()</code> wil
                             opruimen voor de garbage collection.</li>
-                    <li>De volgende stappen moeten allemaal in de <i>#onCreate()</i> uitgevoerd worden. Set de DatabaseReference
+                    <li>De volgende stappen moeten allemaal in de <code>onCreate()</code> uitgevoerd worden. Set de DatabaseReference
                         met <code>databaseReference = FirebaseDatabase.getInstance().getReference("messages");</code>
-                        <li>Voeg nu een referentie toe naar het RecyclerView veld (hint: <i>#findViewById(int)</i>)</li>
-                        <li>Omdat de databases worden opgeslagen van oud-tot-nieuw is het nodig om de RecyclerView de berichten
+                        <li>Voeg nu een referentie toe naar het RecyclerView veld (hint: <code>findViewById(int)</code>)</li>
+                        <li>Omdat de records worden opgeslagen van oud-tot-nieuw is het nodig om de RecyclerView de berichten
                             omgekeerd te laten weergeven (anders zou je dus oude berichten onderaan zien). Dat kan met behulp
                             van de volgende code:</li>
                         <p>
-                            <pre><code><span>
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setStackFromEnd(true);
-        recyclerView.setLayoutManager(layoutManager);
-                                </span></code></pre>
+                    <pre><code><span>
+LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+layoutManager.setStackFromEnd(true);
+recyclerView.setLayoutManager(layoutManager);
+                    </span></code></pre>
                         </p>
                         <li>Maak nu een nieuwe instantie van de MessageAdapter aan. De constructor vraagt om de List
                             <string>, de username, en de context (gebruik hiervoor gewoon <code>this</code>).</li>
                         <li>Set de adapter van de RecyclerView naar de MessageAdapter die je zojuist hebt aangemaakt.</li>
-                        <li>Wat we nu moeten doen is toevoegen van functionaliteit om berichten te versturen. Maak een referentie
-                            naar de sendMessageButton en voeg hieraan een onClickListener toe die de volgende code uitvoert:</li>
+              </ol>
+            </google-codelab-step>
+            <google-codelab-step label="Verstuur berichten" step="4" duration="7">
+              <p>Wat we nu gaan doen is toevoegen van functionaliteit om berichten te versturen.</p>
+                    <ol>
+                        <li>Maak een referentie naar de <code>sendMessageButton</code> en voeg hieraan een <code>onClickListener</code> toe die de volgende code uitvoert:</li>
                         <p>
                             <pre><code><span>
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        Message messageToSend = new Message(format.format(new Date()), username, messageEditText.getText().toString());
-        DatabaseReference uniqueRef = messages.push();
-        uniqueRef.setValue(messageToSend);
-        messageEditText.setText("");
+SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+Message messageToSend = new Message(format.format(new Date()), username, messageEditText.getText().toString());
+DatabaseReference uniqueRef = messages.push();
+uniqueRef.setValue(messageToSend);
+messageEditText.setText("");
                                     </span></code></pre>
                         </p>
-                        <li>Firebase stuurt notificaties naar je DatabaseReference wanneer er een update is (denk hierbij aan
-                            nieuwe berichten). Deze kun je vervolgens automatisch herladen in je RecyclerView met behulp
-                            van een ValueEventListener. Declareer een ValueEventListener als klasse variabel (zodat je de
-                            listener in <i>#onDestroy()</i> weer kunt removen van de reference).</li>
+                        <aside>
+                          <p>Firebase stuurt notificaties naar je DatabaseReference wanneer er een update is (denk hierbij aan
+                              nieuwe berichten). Deze kun je vervolgens automatisch herladen in je RecyclerView met behulp
+                              van een <code>ValueEventListener</code>.</p>
+                        </aside>
+                        <li> Declareer een <code>ValueEventListener</code> als klasse variabel (zodat je de
+                            listener in <code>onDestroy()</code> weer kan verwijderen van de reference).</li>
                         <p>
-                            <pre><code><span>
-    private ValueEventListener listener = new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            messagesList.clear();
-            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                String timestamp = (String) snapshot.child("timestamp").getValue();
-                String name = (String) snapshot.child("username").getValue();
-                String message = (String) snapshot.child("message").getValue();
-                Message receivedMessage = new Message(timestamp, name, message);
-                messagesList.add(receivedMessage);
-            }
-            adapter.notifyDataSetChanged();
-            recyclerView.scrollToPosition(adapter.getItemCount() + 1);
+                        <pre><code><span>
+private ValueEventListener listener = new ValueEventListener() {
+    @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        messagesList.clear();
+        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+            String timestamp = (String) snapshot.child("timestamp").getValue();
+            String name = (String) snapshot.child("username").getValue();
+            String message = (String) snapshot.child("message").getValue();
+            Message receivedMessage = new Message(timestamp, name, message);
+            messagesList.add(receivedMessage);
         }
+        adapter.notifyDataSetChanged();
+        recyclerView.scrollToPosition(adapter.getItemCount() + 1);
+    }
 
-        @Override
-        public void onCancelled(DatabaseError error) {
-            Log.w(this.getClass().getName(), "Failed to read value.", error.toException());
-        }
-    };
-                                    </span></code></pre>
+    @Override
+    public void onCancelled(DatabaseError error) {
+        Log.w(this.getClass().getName(), "Failed to read value.", error.toException());
+    }
+};
+                          </span></code></pre>
                             <p>
-                                <li>Ten slotte gaan we in de <i>#onDestroy()</i> nog even netjes opruimen. Zet de referenties
+                                <li>Ten slotte gaan we in de <code>onDestroy()</code> nog even netjes opruimen. Zet de referenties
                                     naar de RecyclerView en Adapter naar <code>null</code>, en verwijder de listener die
-                                    je aan de DatabaseReference hebt toegevoegd (hint: <i>databaseReference#removeListener(ValueEventListener)</i>).</li>
+                                    je aan de DatabaseReference hebt toegevoegd (hint: <code>databaseReference.removeListener(ValueEventListener)</code>).</li>
                                 <li>Start nu je applicatie en begin met chatten!</li>
                 </ol>
+            </google-codelab-step>
+            <google-codelab-step label="Meer leren?" step="5" duration="0">
+              <p>
+                Je hebt in deze workshop kennis gemaakt met de mogelijkheden van FireBase. Je hebt in relatief korte tijd een chat applicatie gemaakt die synchroniseert over een server met andere gebruikers.
+                Daarnaast werkt de applicatie ook offline. Hij slaat dan de berichten die je hebt getypt op en verstuurd deze wanneer je weer internet hebt.
+              </p>
+
+              <h2>Wil je nog meer leren over Firebase?</h2>
+              <ul>
+                <li><a href="https://firebase.google.com/docs/" target="_blank">Lees de documentatie van Firebase eens door.</a></li>
+                <li><a href="https://firebase.google.com/docs/samples/" target="_blank">Meer voorbeelden van applicaties die zijn gemaakt met Firebase.</a></li>
+                <li><a href="https://firebase.google.com/docs/libraries/" target="_blank">Libraries die zijn gemaakt voor Firebase.</a></li>
+              </ul>
             </google-codelab-step>
         </google-codelab>
 
