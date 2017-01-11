@@ -35,29 +35,21 @@
 
     <google-codelab title="CodeLab: Chatapplicatie met Firebase"
                     last-updated="2016-12-07">
-        <google-codelab-step label="Maak een keuze | iOS vs Android" step="1" duration="2">
-            Nu we het einde van de minor bereikt hebben, weet iedereen hoe je een app bouwt.
-            Iedereen gaat nu een chat applicatie bouwen met behulp van firebase, zodat we straks één applicatie hebben waarin iedereen kan chatten.
-            Dat kan in iOS of in android.
-            <a href="#"><i class="fa fa-apple" aria-hidden="true"></i> Volg de codelab in iOS</a>
-            <a href="#!"><i class="fa fa-android" aria-hidden="true"></i> Volg de codelab in Android</a>
-
-        </google-codelab-step>
 
         <google-codelab-step label="Firebase installeren binnen Xcode" step="2" duration="8">
+          <p>
             Om met firebase te kunnen werken heb je een pod nodig. Die kun je installeren door de volgende stappen te volgen:
+          </p>
             <ol>
-                <li>Maak een nieuw xcode project</li>
+                <li>Maak een nieuw xcode project. <strong>Gebruik <code>nl.han.ica.mad.ios.firebasedemo</code> als identifier voor je project.</strong></li>
 
-                Om de pod te installeren:
-                <li>Open de terminal</li>
-                <li>Ga naar je project root met behulp van het cd command</li>
-                <li>Type het command “pod init”</li>
-                <li>Als dit foutgaat, heb je nog geen pods geinstalleerd. Doe dit met behulp van commando "sudo gem install cocoapods". Dit duurt even</li>
-                <li>Laat de terminal open en open xcode, daar staat nu een pod file</li>
-                <li>Open deze pod file</li>
-                <li>Zorg dat de pod file er zo uit komt te zien:</li>
-                <li><p><pre><code><span>
+                <li>Open de terminal.</li>
+                <li>Ga naar je project root met behulp van het <code>cd</code> command.</li>
+                <li>Type het command <code>pod init</code> (Als dit foutgaat, heb je nog geen pods geinstalleerd. Doe dit met behulp van commando <code>sudo gem install cocoapods</code>. Dit duurt even)</li>
+                <li>Laat de terminal open en open XCode. Daar staat nu een pod file.</li>
+                <li>Open deze pod file.</li>
+                <li>Zorg dat de pod file gelijk is aan het onderstaande voorbeeld:</li>
+                <p><pre><code><span>
 target 'MAD_Research' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
@@ -66,9 +58,9 @@ target 'MAD_Research' do
   pod 'Firebase/Core'
   pod 'Firebase/Database'
 end
-            </span></code></pre></p></li>
-                <li>Sluit het project</li>
-                <li>Command “pod install” in de terminal</li>
+            </span></code></pre></p>
+                <li>Sluit XCode af.</li>
+                <li>Voer het command <code>pod install</code> in de terminal uit</li>
                 <li>Download de file GoogleService-info.plist van https://s3.eu-central-1.amazonaws.com/mad-codelab/GoogleService-Info+(2).plist - normaal maak je deze aan aan de hand van je firebase database. Deze is gekoppeld aan onze Firebase database</li>
                 <li>Plaats deze file is project root</li>
                 <li>Open nu je project met de .xcworkspace extentie<strong> niet de normale xcode file </strong></li>
