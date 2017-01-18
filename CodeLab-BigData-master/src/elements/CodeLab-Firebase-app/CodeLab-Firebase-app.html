@@ -37,6 +37,11 @@
                     last-updated="2017-01-22">
 
         <google-codelab-step label="Firebase installeren binnen Xcode" step="2" duration="8">
+          <aside class="style-scope codelab-firebase-app">
+            <p class="style-scope codelab-firebase-app">
+                Deze codelab is geschreven voor Swift <strong class="style-scope codelab-firebase-app">versie 3</strong>.
+            </p>
+          </aside>
           <p>
             Om met firebase te kunnen werken heb je een pod nodig. Die kun je installeren door de volgende stappen te volgen:
           </p>
@@ -45,10 +50,9 @@
 
                 <li>Open de terminal.</li>
                 <li>Ga naar je project root met behulp van het <code>cd</code> command.</li>
-                <li>Type het command <code>pod init</code>
-                <li>Als dit foutgaat, heb je nog geen pods geinstalleerd. Doe dit met behulp van commando <code>sudo gem install cocoapods</code>. Dit duurt even. Mocht dit niet nodig zijn ga dan door naar de volgende stap</li>
-                <li>Laat de terminal open en open XCode. Daar staat nu een pod file.</li>
-                <li>Open deze pod file.</li>
+                <li>Type het command <code>pod init</code>.
+                <li>Als dit fout gaat, heb je nog geen pods geinstalleerd. Doe dit met behulp van commando <code>sudo gem install cocoapods</code>. Dit duurt even. Mocht dit niet nodig zijn ga dan door naar de volgende stap</li>
+                <li>Laat de terminal open en open XCode. Daar staat nu een pod file. Open deze</li>
                 <li>Zorg dat de pod file gelijk is aan het onderstaande voorbeeld:</li>
                 <p><pre><code><span>
 target 'MAD_Research' do
@@ -64,9 +68,13 @@ end
                 <li>Voer het Commando <code>pod install</code> in de terminal uit</li>
                 <li>Download de file GoogleService-info.plist van <a target="_blank" href="https://s3.eu-central-1.amazonaws.com/mad-codelab/GoogleService-Info.plist">https://s3.eu-central-1.amazonaws.com/mad-codelab/GoogleService-Info.plist</a> - normaal maak je deze aan aan de hand van je firebase database. Deze is gekoppeld aan onze Firebase database</li>
                 <li>Plaats deze file in je project root</li>
-                <li>Open nu je project met de .xcworkspace extentie<strong> niet de normale xcode file </strong></li>
+                <aside class="style-scope codelab-firebase-app">
+                    <p class="style-scope codelab-firebase-app">
+                       Open  je project in het vervolg met het <strong>.xcworkspace</strong> bestand. 
+                    </p>
+                </aside>
             </ol>
-            Firebase is nu geïnstalleerd
+            <strong> Firebase is nu geïnstalleerd 🎉 🙌 </strong>
 
         </google-codelab-step>
 
@@ -76,28 +84,34 @@ end
               Je kunt nu je app gaan inrichten.
             </p>
             <ol>
-                <li>Maak een Message class met publieke variabelen timestamp, username en message. (Strings)</li>
-                <li>Maak een variabele genaamd 'myName' met daarin je eigen naam</li>
+                <li>Maak een Message class met publieke variabelen timestamp, username en message (Strings).</li>
+                <li>Maak een variabele genaamd 'myName' met daarin je eigen naam.</li>
                 <li>Maak een nieuwe variable aan waarin alle messages worden opgeslagen. Deze worden opgeslagen in een array van arrays <code>&#91; &#91;Message&#93; &#93;</code></li>
-                <li>Maak een constructor waarin deze variablen worden geinitialiseerd</li>
-                <li>Maak een user interface voor je app. Er moet een tableview in zitten om berichten te laten zien en een tekstbalk om berichten in te typen</li>
-                <li>Het is aan te raden een navigation controller te gebruiken</li>
+                <li>Maak een constructor waarin deze variablen worden geinitialiseerd.</li>
+                <li>Maak een user interface voor je app. Er moet een tableview in zitten om berichten te laten zien en een tekstbalk om berichten in te typen.</li>
+
+                <aside class="style-scope codelab-firebase-app">
+                    <p class="style-scope codelab-firebase-app">
+                       Tip: Maak gebruik van een navigation controller.
+                    </p>
+                </aside>
+
                 <li>Koppel je outlets aan je code. Noem je textfield 'textField'</li>
                 <li>Om je textField te kunnen bedienen met de return knop op het toetsenbord kun je de volgende code gebruiken. Deze code compileert pas als je firebase hebt geconfigureerd.</li>
             </ol>
                 <p><pre><code><span>
-                func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-                let date = NSDate()
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                let dateString = dateFormatter.string(from: date as Date)
-                if textField.text != nil {
-                let message: [String:String] = ["timestamp": dateString, "username": self.myName, "message": textField.text!]
-                self.ref.childByAutoId().setValue(message)
-                }
-                self.tableView.reloadData()
-                return true
-                }⁠
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        let date = NSDate()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let dateString = dateFormatter.string(from: date as Date)
+        if textField.text != nil {
+            let message: [String:String] = ["timestamp": dateString, "username": self.myName, "message": textField.text!]
+            self.ref.childByAutoId().setValue(message)
+        }
+        self.tableView.reloadData()
+        return true
+    }⁠
                 </span></code></pre></p>
 
         </google-codelab-step>
@@ -105,64 +119,70 @@ end
         <google-codelab-step label="Firebase configureren" step="4" duration="5">
               <p>Om firebase te configureren:</p>
               <ul>
-                <li>Voeg FIRApp.configure() toe aan de appdelegate functie 'application' en import Firebase</li>
-                <li>Import firebaseDatabase in je viewcontroller</li>
-                <li>Om met de externe firebase database te communiceren is er een referentie nodig. Maak een globale var genaamd 'ref' van type FIRDatabaseReference!</li>
+                <li>Voeg FIRApp.configure() toe aan de appdelegate functie 'application' en import Firebase.</li>
+                <li>Import firebaseDatabase in je viewcontroller.</li>
+                <li>Om met de externe firebase database te communiceren is er een referentie nodig. Maak een globale var genaamd 'ref' van type 'FIRDatabaseReference!'.</li>
               </ul>
               <p><pre><code><span>
-              let ref = FIRDatabase.database().reference()
+    let ref = FIRDatabase.database().reference()
               </span></code></pre></p>
               <ul>
                 <li>Firebase stuurt een notification wanneer er een update beschikbaar is. Om hiernaar te luisteren zet je een observer in de viewDidLoad</li>
               </ul>
               <p><pre><code><span>
-                // ref.observe observes the database and will be excecuted if there is new data available
-        ref.observe(.value, with: { snapshot in
-            self.messages.removeAll();
-            // This for each loops through all messages inside the database
-            for child in snapshot.children
-            {
-                let childSnapshot = child as! FIRDataSnapshot
+    // ref.observe observes the database and will be excecuted if there is new data available
+    ref.observe(.value, with: { snapshot in
+        self.messages.removeAll();
+        // This for each loops through all messages inside the database
+        for child in snapshot.children
+        {
+            let childSnapshot = child as! FIRDataSnapshot
 
-                // Because we store our data under a generated key which we dont know what it is, we will look inside this key with snapshot.childsnapshot(forPath: childSnapshot.key)
-                let messageSnapshot = snapshot.childSnapshot(forPath: childSnapshot.key)
+            // Because we store our data under a generated key which we dont know what it is, we will look inside this key with snapshot.childsnapshot(forPath: childSnapshot.key)
+            let messageSnapshot = snapshot.childSnapshot(forPath: childSnapshot.key)
 
-                // MessageData contains de data of one Message
-                let messageData = messageSnapshot.value as! NSDictionary
+            // MessageData contains de data of one Message
+            let messageData = messageSnapshot.value as! NSDictionary
 
-                // The following rules read the data from the messageData
-                let time = messageData.value(forKey: "timestamp") as? String
-                let user = messageData.value(forKey: "username") as? String
-                let messageString = messageData.value(forKey: "message") as? String
+            // The following rules read the data from the messageData
+            let time = messageData.value(forKey: "timestamp") as? String
+            let user = messageData.value(forKey: "username") as? String
+            let messageString = messageData.value(forKey: "message") as? String
 
-                // Check if all data is correct
-                if (time != nil), (user != nil), (messageString != nil) {
+            // Check if all data is correct
+            if (time != nil), (user != nil), (messageString != nil) {
 
-                    // And insert the data in our messages array
-                    let messageToInsert = Message(timestamp: time!, username: user!, message: messageString!)
-                    self.messages.append([messageToInsert])
-                }
-
+                // And insert the data in our messages array
+                let messageToInsert = Message(timestamp: time!, username: user!, message: messageString!)
+                self.messages.append([messageToInsert])
             }
-            self.tableView.reloadData()
-        })
+
+        }
+        self.tableView.reloadData()
+    })
             </span></code></pre></p>
 
-          <p>
-            Als de online database wordt geupdate, wordt er in de closure een nieuwe lokale message gemaakt.
-            De user interface wordt geupdate door de <code>self.tableView.reloadData()</code>
-          </p>
+           <aside class="style-scope codelab-firebase-app">
+            <p class="style-scope codelab-firebase-app">
+                Als de online database wordt geupdate, wordt er in de closure een nieuwe lokale message gemaakt.
+                De user interface wordt geupdate door de <code>self.tableView.reloadData()</code>
+            </p>
+          </aside>
 
         </google-codelab-step>
 
         <google-codelab-step label="Een bericht versturen" step="5" duration="5">
-            Om zelf een bericht te versturen, hoef je deze alleen op te slaan in de online database.
-            Alle andere chatapplicaties hebben zich aangemeld om te observeren, dus ze zouden bericht van de de database moeten krijgen als je een nieuw bericht plaatst.
-            Je schrijft naar de database met de volgende regel.
+            <aside class="style-scope codelab-firebase-app">
+                <p class="style-scope codelab-firebase-app">
+                    Om zelf een bericht te versturen, hoef je deze alleen op te slaan in de online database.
+                    Alle andere chatapplicaties hebben zich aangemeld om te observeren, dus ze zouden bericht van de de database moeten krijgen als je een nieuw bericht plaatst.
+                    Je schrijft naar de database met de volgende regel.
+                </p>
+            </aside>
+           
             <p><pre><code><span>
-
-                self.ref.child("message").childByAutoId().setValue(MESSAGE_OBJECT)
-                //Pas ‘MESSAGE_OBJECT’ aan naar een eigen referentie nr een bericht
+    self.ref.child("message").childByAutoId().setValue(MESSAGE_OBJECT)
+    //Pas ‘MESSAGE_OBJECT’ aan naar een eigen referentie nr een bericht
             </span></code></pre></p>
 
         </google-codelab-step>
