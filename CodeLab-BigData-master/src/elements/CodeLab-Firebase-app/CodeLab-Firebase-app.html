@@ -103,12 +103,12 @@ end
 
         <google-codelab-step label="Firebase configureren" step="3" duration="5">
               <p>Om firebase te configureren:</p>
-              <ul>
+              <ol>
                 <li>Voeg <code>import Firebase</code> toe aan de appdelegate.</li>
                 <li>Voeg <code>FIRApp.configure()</code> toe aan de appdelegate functie <code>application</code>.</li>
                 <li>Voeg <code>import Firebase</code> toe aan je viewcontroller.</li>
                 <li>Om met de externe firebase database te communiceren is er een referentie nodig. Maak een globale var genaamd <code>ref</code> van type <code>FIRDatabaseReference!</code>.</li>
-              </ul>
+              </ol>
               <p><pre><code><span>
     let ref = FIRDatabase.database().reference()
               </span></code></pre></p>
@@ -116,44 +116,28 @@ end
                 <li>Firebase stuurt een notification wanneer er een update beschikbaar is. Om hiernaar te luisteren zet je een observer in de <code>viewDidLoad</code>.</li>
               </ul>
               <p><pre><code><span>
-    // ref.observe observes the database and will be excecuted if there is new data available
+       // ref.observe observes the database and will be excecuted if there is new data available
     ref.observe(.value, with: { snapshot in
         self.messages.removeAll();
         // This for each loops through all messages inside the database
         for child in snapshot.children
         {
-            let childSnapshot = child as! FIRDataSnapshot
+            // Create a variable and force cast child to a FIRDataSnapshot
 
-            // Because we store our data under a generated key which we dont know what it is, we will look inside this key with snapshot.childsnapshot(forPath: childSnapshot.key)
-            let messageSnapshot = snapshot.childSnapshot(forPath: childSnapshot.key)
+            // Creata variable representing the message. 
+            // You can do this by calling snapshot.childSnapshot and using the previously created FIRDataSnapShot.key as parameter.  
 
-            // MessageData contains de data of one Message
-            let messageData = messageSnapshot.value as! NSDictionary
+            // Create a variable which contains the previously created variable as NSDictionary
 
-            // The following rules read the data from the messageData
-            let time = messageData.value(forKey: "timestamp") as? String
-            let user = messageData.value(forKey: "username") as? String
-            let messageString = messageData.value(forKey: "message") as? String
-
-            // Check if all data is correct
-            if (time != nil), (user != nil), (messageString != nil) {
-
-                // And insert the data in our messages array
-                let messageToInsert = Message(timestamp: time!, username: user!, message: messageString!)
-                self.messages.append([messageToInsert])
-            }
-
+            // Now you can retrieve each value with it's own key: "timestamp, username and message". 
+            // You should casts these to a String. Since these values as Strings. 
+            // Be sure to test if the cast was succesfull! 
+        
+            // Create a new Message object containing the values and append it to the messages list. 
         }
-        self.tableView.reloadData()
+        // Reload the table data here, to refresh the view
     })
             </span></code></pre></p>
-
-           <aside class="style-scope codelab-firebase-app">
-            <p class="style-scope codelab-firebase-app">
-                Als de online database wordt geupdate, wordt er in de closure een nieuwe lokale message gemaakt.
-                De user interface wordt geupdate door de <code>self.tableView.reloadData()</code>.
-            </p>
-          </aside>
 
         </google-codelab-step>
 
