@@ -36,7 +36,7 @@
     <google-codelab title="CodeLab: Chatapplicatie met Firebase"
                     last-updated="2017-01-22">
 
-        <google-codelab-step label="Firebase installeren binnen Xcode" step="2" duration="8">
+        <google-codelab-step label="Firebase installeren binnen Xcode" step="1" duration="8">
           <aside class="style-scope codelab-firebase-app">
             <p class="style-scope codelab-firebase-app">
                 Deze codelab is geschreven voor Swift <strong class="style-scope codelab-firebase-app">versie 3</strong>.
@@ -51,8 +51,8 @@
                 <li>Open de terminal.</li>
                 <li>Ga naar je project root met behulp van het <code>cd</code> command.</li>
                 <li>Type het command <code>pod init</code>.
-                <li>Als dit fout gaat, heb je nog geen pods geinstalleerd. Doe dit met behulp van commando <code>sudo gem install cocoapods</code>. Dit duurt even. Mocht dit niet nodig zijn ga dan door naar de volgende stap</li>
-                <li>Laat de terminal open en open XCode. Daar staat nu een pod file. Open deze</li>
+                <li>Als dit fout gaat, heb je nog geen pods geinstalleerd. Doe dit met behulp van commando <code>sudo gem install cocoapods</code>. Dit duurt even. Mocht dit niet nodig zijn ga dan door naar de volgende stap.</li>
+                <li>Laat de terminal open en open XCode. Daar staat nu een pod file. Open deze.</li>
                 <li>Zorg dat de pod file gelijk is aan het onderstaande voorbeeld:</li>
                 <p><pre><code><span>
 target 'MAD_Research' do
@@ -65,27 +65,28 @@ target 'MAD_Research' do
 end
             </span></code></pre></p>
                 <li>Sluit XCode af.</li>
-                <li>Voer het Commando <code>pod install</code> in de terminal uit</li>
-                <li>Download de file GoogleService-info.plist van <a target="_blank" href="https://s3.eu-central-1.amazonaws.com/mad-codelab/GoogleService-Info.plist">https://s3.eu-central-1.amazonaws.com/mad-codelab/GoogleService-Info.plist</a> - normaal maak je deze aan aan de hand van je firebase database. Deze is gekoppeld aan onze Firebase database</li>
-                <li>Plaats deze file in je project root</li>
+                <li>Voer het Commando <code>pod install</code> in de terminal uit.</li>
+                <li>Download de file GoogleService-info.plist van <a target="_blank" href="https://s3.eu-central-1.amazonaws.com/mad-codelab/GoogleService-Info.plist">https://s3.eu-central-1.amazonaws.com/mad-codelab/GoogleService-Info.plist</a> </li>
+                <li>Plaats deze file in je project root.</li>
                 <aside class="style-scope codelab-firebase-app">
                     <p class="style-scope codelab-firebase-app">
-                       Open  je project in het vervolg met het <strong>.xcworkspace</strong> bestand. 
+                       normaal maak je het .plist bestand aan op basis van je firebase database. Deze is gekoppeld aan onze Firebase database 
                     </p>
                 </aside>
+                <li> Open  je project in het vervolg met het <strong>.xcworkspace</strong> bestand. </li>
             </ol>
-            <strong> Firebase is nu geïnstalleerd 🎉 🙌 </strong>
+            <strong> Firebase is nu geïnstalleerd! 🎉 🙌</strong>
 
         </google-codelab-step>
 
-        <google-codelab-step label="Het begin van je chat app" step="3" duration="5">
+        <google-codelab-step label="Het begin van je chat app" step="2" duration="5">
 
             <p>
               Je kunt nu je app gaan inrichten.
             </p>
             <ol>
-                <li>Maak een Message class met publieke variabelen timestamp, username en message (Strings).</li>
-                <li>Maak een variabele genaamd 'myName' met daarin je eigen naam.</li>
+                <li>Maak een <code>Message</code> class met publieke variabelen <code>timestamp, username en message</code>(Strings).</li>
+                <li>Maak een variabele genaamd <code>myName</code> met daarin je eigen naam.</li>
                 <li>Maak een nieuwe variable aan waarin alle messages worden opgeslagen. Deze worden opgeslagen in een array van arrays <code>&#91; &#91;Message&#93; &#93;</code></li>
                 <li>Maak een constructor waarin deze variablen worden geinitialiseerd.</li>
                 <li>Maak een user interface voor je app. Er moet een tableview in zitten om berichten te laten zien en een tekstbalk om berichten in te typen.</li>
@@ -96,38 +97,23 @@ end
                     </p>
                 </aside>
 
-                <li>Koppel je outlets aan je code. Noem je textfield 'textField'</li>
-                <li>Om je textField te kunnen bedienen met de return knop op het toetsenbord kun je de volgende code gebruiken. Deze code compileert pas als je firebase hebt geconfigureerd.</li>
+                <li>Koppel je outlets aan je code. Noem je textfield <code>textField</code>.</li>
             </ol>
-                <p><pre><code><span>
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        let date = NSDate()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let dateString = dateFormatter.string(from: date as Date)
-        if textField.text != nil {
-            let message: [String:String] = ["timestamp": dateString, "username": self.myName, "message": textField.text!]
-            self.ref.childByAutoId().setValue(message)
-        }
-        self.tableView.reloadData()
-        return true
-    }⁠
-                </span></code></pre></p>
-
         </google-codelab-step>
 
-        <google-codelab-step label="Firebase configureren" step="4" duration="5">
+        <google-codelab-step label="Firebase configureren" step="3" duration="5">
               <p>Om firebase te configureren:</p>
               <ul>
-                <li>Voeg FIRApp.configure() toe aan de appdelegate functie 'application' en import Firebase.</li>
-                <li>Import firebaseDatabase in je viewcontroller.</li>
-                <li>Om met de externe firebase database te communiceren is er een referentie nodig. Maak een globale var genaamd 'ref' van type 'FIRDatabaseReference!'.</li>
+                <li>Voeg <code>import Firebase</code> toe aan de appdelegate.</li>
+                <li>Voeg <code>FIRApp.configure()</code> toe aan de appdelegate functie <code>application</code>.</li>
+                <li>Voeg <code>import Firebase</code> toe aan je viewcontroller.</li>
+                <li>Om met de externe firebase database te communiceren is er een referentie nodig. Maak een globale var genaamd <code>ref</code> van type <code>FIRDatabaseReference!</code>.</li>
               </ul>
               <p><pre><code><span>
     let ref = FIRDatabase.database().reference()
               </span></code></pre></p>
               <ul>
-                <li>Firebase stuurt een notification wanneer er een update beschikbaar is. Om hiernaar te luisteren zet je een observer in de viewDidLoad</li>
+                <li>Firebase stuurt een notification wanneer er een update beschikbaar is. Om hiernaar te luisteren zet je een observer in de <code>viewDidLoad</code>.</li>
               </ul>
               <p><pre><code><span>
     // ref.observe observes the database and will be excecuted if there is new data available
@@ -165,26 +151,54 @@ end
            <aside class="style-scope codelab-firebase-app">
             <p class="style-scope codelab-firebase-app">
                 Als de online database wordt geupdate, wordt er in de closure een nieuwe lokale message gemaakt.
-                De user interface wordt geupdate door de <code>self.tableView.reloadData()</code>
+                De user interface wordt geupdate door de <code>self.tableView.reloadData()</code>.
             </p>
           </aside>
 
         </google-codelab-step>
 
-        <google-codelab-step label="Een bericht versturen" step="5" duration="5">
+        <google-codelab-step label="Een bericht versturen" step="4" duration="5">
             <aside class="style-scope codelab-firebase-app">
                 <p class="style-scope codelab-firebase-app">
                     Om zelf een bericht te versturen, hoef je deze alleen op te slaan in de online database.
                     Alle andere chatapplicaties hebben zich aangemeld om te observeren, dus ze zouden bericht van de de database moeten krijgen als je een nieuw bericht plaatst.
-                    Je schrijft naar de database met de volgende regel.
                 </p>
-            </aside>
-           
+                </aside>
+                <ol> 
+                    <li> 
+                        Om een bericht te kunnen versturen naar de server moeten we een enter op het textfield afvangen. Dit kan met de volgende code: 
+                    </li>
+                </ol>
             <p><pre><code><span>
-    self.ref.child("message").childByAutoId().setValue(MESSAGE_OBJECT)
-    //Pas ‘MESSAGE_OBJECT’ aan naar een eigen referentie nr een bericht
+            </ol>
+                <p><pre><code><span>
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        let date = NSDate()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let dateString = dateFormatter.string(from: date as Date)
+        if textField.text != nil {
+            let message: [String:String] = ["timestamp": dateString, "username": self.myName, "message": textField.text!]
+            self.ref.child("message").childByAutoId().setValue(MESSAGE_OBJECT)
+        }
+        self.tableView.reloadData()
+        return true
+    }⁠
+                </span></code></pre></p>
             </span></code></pre></p>
 
+        </google-codelab-step>
+        <google-codelab-step label="Meer leren?" step="5" duration="0">
+                Je hebt in deze workshop kennis gemaakt met de mogelijkheden van FireBase. Je hebt in relatief korte tijd een chat applicatie gemaakt die synchroniseert over een server met andere gebruikers.
+                Daarnaast werkt de applicatie ook offline. Hij slaat dan de berichten die je hebt getypt op en verstuurd deze wanneer je weer internet hebt.
+              </p>
+
+              <h2 class="style-scope codelab-firebase-app">Wil je nog meer leren over Firebase?</h2>
+              <ul class="style-scope codelab-firebase-app">
+                <li class="style-scope codelab-firebase-app"><a href="https://firebase.google.com/docs/" target="_blank" class="style-scope codelab-firebase-app">Lees de documentatie van Firebase eens door.</a></li>
+                <li class="style-scope codelab-firebase-app"><a href="https://firebase.google.com/docs/samples/" target="_blank" class="style-scope codelab-firebase-app">Meer voorbeelden van applicaties die zijn gemaakt met Firebase.</a></li>
+                <li class="style-scope codelab-firebase-app"><a href="https://firebase.google.com/docs/libraries/" target="_blank" class="style-scope codelab-firebase-app">Libraries die zijn gemaakt voor Firebase.</a></li>
+              </ul>
         </google-codelab-step>
     </google-codelab>
 
