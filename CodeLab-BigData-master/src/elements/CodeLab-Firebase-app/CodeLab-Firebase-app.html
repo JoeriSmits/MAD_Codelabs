@@ -34,7 +34,7 @@
     </style>
 
     <google-codelab title="CodeLab: Chatapplicatie met Firebase"
-                    last-updated="2016-12-07">
+                    last-updated="2017-01-22">
 
         <google-codelab-step label="Firebase installeren binnen Xcode" step="2" duration="8">
           <p>
@@ -45,7 +45,8 @@
 
                 <li>Open de terminal.</li>
                 <li>Ga naar je project root met behulp van het <code>cd</code> command.</li>
-                <li>Type het command <code>pod init</code> (Als dit foutgaat, heb je nog geen pods geinstalleerd. Doe dit met behulp van commando <code>sudo gem install cocoapods</code>. Dit duurt even)</li>
+                <li>Type het command <code>pod init</code>
+                <li>Als dit foutgaat, heb je nog geen pods geinstalleerd. Doe dit met behulp van commando <code>sudo gem install cocoapods</code>. Dit duurt even. Mocht dit niet nodig zijn ga dan door naar de volgende stap</li>
                 <li>Laat de terminal open en open XCode. Daar staat nu een pod file.</li>
                 <li>Open deze pod file.</li>
                 <li>Zorg dat de pod file gelijk is aan het onderstaande voorbeeld:</li>
@@ -60,9 +61,9 @@ target 'MAD_Research' do
 end
             </span></code></pre></p>
                 <li>Sluit XCode af.</li>
-                <li>Voer het command <code>pod install</code> in de terminal uit</li>
-                <li>Download de file GoogleService-info.plist van https://s3.eu-central-1.amazonaws.com/mad-codelab/GoogleService-Info+(2).plist - normaal maak je deze aan aan de hand van je firebase database. Deze is gekoppeld aan onze Firebase database</li>
-                <li>Plaats deze file is project root</li>
+                <li>Voer het Commando <code>pod install</code> in de terminal uit</li>
+                <li>Download de file GoogleService-info.plist van <a target="_blank" href="https://s3.eu-central-1.amazonaws.com/mad-codelab/GoogleService-Info.plist">https://s3.eu-central-1.amazonaws.com/mad-codelab/GoogleService-Info.plist</a> - normaal maak je deze aan aan de hand van je firebase database. Deze is gekoppeld aan onze Firebase database</li>
+                <li>Plaats deze file in je project root</li>
                 <li>Open nu je project met de .xcworkspace extentie<strong> niet de normale xcode file </strong></li>
             </ol>
             Firebase is nu geïnstalleerd
@@ -74,15 +75,16 @@ end
             <p>
               Je kunt nu je app gaan inrichten.
             </p>
-            <ul>
+            <ol>
                 <li>Maak een Message class met publieke variabelen timestamp, username en message. (Strings)</li>
-                <li>Maar een variabel genaamd 'myName' met daarin je eigen naam</li>
+                <li>Maak een variabele genaamd 'myName' met daarin je eigen naam</li>
+                <li>Maak een nieuwe variable aan waarin alle messages worden opgeslagen. Deze worden opgeslagen in een array van arrays <code>&#91; &#91;Message&#93; &#93;</code></li>
                 <li>Maak een constructor waarin deze variablen worden geinitialiseerd</li>
                 <li>Maak een user interface voor je app. Er moet een tableview in zitten om berichten te laten zien en een tekstbalk om berichten in te typen</li>
                 <li>Het is aan te raden een navigation controller te gebruiken</li>
                 <li>Koppel je outlets aan je code. Noem je textfield 'textField'</li>
                 <li>Om je textField te kunnen bedienen met de return knop op het toetsenbord kun je de volgende code gebruiken. Deze code compileert pas als je firebase hebt geconfigureerd.</li>
-            </ul>
+            </ol>
                 <p><pre><code><span>
                 func textFieldShouldReturn(_ textField: UITextField) -> Bool {
                 let date = NSDate()
@@ -105,14 +107,13 @@ end
               <ul>
                 <li>Voeg FIRApp.configure() toe aan de appdelegate functie 'application' en import Firebase</li>
                 <li>Import firebaseDatabase in je viewcontroller</li>
-                <li>Om met de externe firebase database te communiceren is er een referentie nodig.</li>
-                <li>Maak een globale var genaamd 'ref' van type FIRDatabaseReference!</li>
+                <li>Om met de externe firebase database te communiceren is er een referentie nodig. Maak een globale var genaamd 'ref' van type FIRDatabaseReference!</li>
               </ul>
               <p><pre><code><span>
               let ref = FIRDatabase.database().reference()
               </span></code></pre></p>
               <ul>
-                <li>Firebase stuurt een notification wanneer er een update beschikbaar is. Om hiernaar te luisteren zet je een observer in de view did load</li>
+                <li>Firebase stuurt een notification wanneer er een update beschikbaar is. Om hiernaar te luisteren zet je een observer in de viewDidLoad</li>
               </ul>
               <p><pre><code><span>
                 // ref.observe observes the database and will be excecuted if there is new data available
@@ -144,14 +145,12 @@ end
 
             }
             self.tableView.reloadData()
-            self.tableView.tableViewScrollToBottom(animated: true)
-
         })
             </span></code></pre></p>
 
           <p>
-            Er wordt nu lokaal een message gemaakt in deze clojure elke keer als de online database wordt geupdate.
-            Zorg ervoor dat op dat moment ook je userinterface wordt geupdate om dit weer te geven.
+            Als de online database wordt geupdate, wordt er in de closure een nieuwe lokale message gemaakt.
+            De user interface wordt geupdate door de <code>self.tableView.reloadData()</code>
           </p>
 
         </google-codelab-step>
