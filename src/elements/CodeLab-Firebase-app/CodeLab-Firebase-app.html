@@ -61,7 +61,7 @@ buildscript {
 }
             </span></code></pre>
                     </p>
-                    <li>Voeg vervolgens de Firebase library toe aan de project <code>build.gradle</code> (deze staat in Android Studio gemarkeerd
+                    <li>Voeg vervolgens de Firebase library en een android support library voor de Recyclerview toe aan de project <code>build.gradle</code> (deze staat in Android Studio gemarkeerd
                         als <i>Module: app</i>)</li>
                     <p>
                         <pre><code><span>
@@ -72,14 +72,18 @@ android {
 }
 
 dependencies {
+
   // ...
-  compile 'com.google.firebase:firebase-core:10.0.1'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:design:25.1.0'
+    compile 'com.google.firebase:firebase-database:9.8.0'
+    testCompile 'junit:junit:4.12'
 
   // Getting a "Could not find" error? Make sure you have
   // the latest Google Repository in the Android SDK manager
 }
 
-// ADD THIS AT THE BOTTOM
+  // ADD THIS TO THE BOTTOM
 apply plugin: 'com.google.gms.google-services'</span></code></pre>
                     </p>
                     <aside>
@@ -116,100 +120,19 @@ apply plugin: 'com.google.gms.google-services'</span></code></pre>
                     <li>Nu is het tijd om je activity in te richten. Voor het gemak wordt de layout <a href="http://pastebin.com/dkfzibyp">aangeleverd</a>.
                         Deze kun je vervolgens in de <code>onCreate()</code> als layout instellen (hint: <code>setContentView()</code>).</li>
                     <li>Vul <code>app/src/main/res/values/colors.xml</code> aan met de <a href="http://pastebin.com/9Ne9WXFH" target="_blank">volgende kleuren.</a></li>
+                    <li>Vul <code>app/src/main/res/values/strings.xml</code> aan met de <a href="http://pastebin.com/gbAEGgCD">volgende strings.</a></li>
+                    <li>Maak een nieuwe layout file in <code>app/src/main/res/layout/single_message.xml</code> met daarin de volgende <a href="http://pastebin.com/ydPEm8PZ">code</a></li>
                     <aside>
                       <p>
                         Voor het weergeven van de messages wordt een RecyclerView gebruikt. RecyclerView is de efficiëntste implementatie van een ListView.
                       </p>
                     </aside>
-                    <li>Voor deze RecyclerView wordt de volgende Adapter aangeleverd.</li>
+                    <li>Voor deze RecyclerView wordt de <a href="http://pastebin.com/6udMj2ZK">volgende Adapter aangeleverd.</a></li>
                     <p>
-                    <pre><code><span>
-import android.content.Context;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import java.util.List;
-
-import nl.han.ica.mad.android.firebasedemo.model.Message;
-
-/**
- * Provides a RecyclerView Adapter to display messages fetched from the FireBase reference.
- */
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
-
-    private List<Message> messages;
-    private String currentUser;
-    private Context context;
-
-    /**
-     * Constructor to instantiate a new MessageAdapter.
-     *
-     * @param messages The list of messages fetched by the {@link com.google.firebase.database.DatabaseReference FireBase database reference}
-     * @param currentUser The current logged in user
-     * @param context The context of this MessageAdapter (i.e. {@link nl.han.ica.mad.android.firebasedemo.MainActivity})
-     */
-    MessageAdapter(List<Message> messages, String currentUser, Context context) {
-        this.context = context;
-        this.messages = messages;
-        this.currentUser = currentUser;
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View messageView = inflater.inflate(R.layout.single_message, parent, false);
-        return new ViewHolder(messageView);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Message message = messages.get(position);
-        holder.username.setText(String.format(context.getResources().getString(R.string.sender_name), message.username));
-        holder.message.setText(message.message);
-
-        if (currentUser.equals(message.username)) {
-            holder.container.setBackgroundColor(context.getColor(R.color.messageBackgroundUser));
-            holder.wrapper.setGravity(Gravity.END);
-        } else {
-            holder.container.setBackgroundColor(context.getColor(R.color.messageBackground));
-            holder.wrapper.setGravity(Gravity.START);
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        return messages.size();
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
-        TextView message;
-        TextView username;
-        LinearLayout container;
-        LinearLayout wrapper;
-
-        ViewHolder(View itemView) {
-            super(itemView);
-            message = (TextView) itemView.findViewById(R.id.message);
-            username = (TextView) itemView.findViewById(R.id.username);
-            container = (LinearLayout) itemView.findViewById(R.id.messageContainer);
-            wrapper = (LinearLayout) itemView.findViewById(R.id.messageWrapper);
-        }
-    }
-}
-                    </span></code></pre>
                     </p>
                     <li>Declareer in je Activity vijf velden: een String username met je naam (dus <code>String username = "JouwNaam";</code>),
                         een RecyclerView, een DatabaseReference, een List
-                        <Message> en een MessageAdapter. Dit moeten klasse-variabelen zijn, omdat je ze in de <code>onDestroy()</code> wil
+                        &lt;Message&gt; en een MessageAdapter. Dit moeten klasse-variabelen zijn, omdat je ze in de <code>onDestroy()</code> wil
                             opruimen voor de garbage collection.</li>
                     <li>De volgende stappen moeten allemaal in de <code>onCreate()</code> uitgevoerd worden. Set de DatabaseReference
                         met <code>databaseReference = FirebaseDatabase.getInstance().getReference("messages");</code>
@@ -232,6 +155,7 @@ recyclerView.setLayoutManager(layoutManager);
             <google-codelab-step label="Verstuur berichten" step="4" duration="7">
               <p>Wat we nu gaan doen is toevoegen van functionaliteit om berichten te versturen.</p>
                     <ol>
+                        <li>Maak een referentie aan naar de <code>messageEditText</code> (hint: deze moet final zijn)</li>
                         <li>Maak een referentie naar de <code>sendMessageButton</code> en voeg hieraan een <code>onClickListener</code> toe die de volgende code uitvoert:</li>
                         <p>
                             <pre><code><span>
@@ -273,6 +197,7 @@ private ValueEventListener listener = new ValueEventListener() {
 };
                           </span></code></pre>
                             <p>
+                                <li>Nu we een <code>ValueEventListener</code> aangemaakt hebben, moeten we deze toevoegen aan het messages object <code>(DatabaseReference messages)</code>.</li>
                                 <li>Ten slotte gaan we in de <code>onDestroy()</code> nog even netjes opruimen. Zet de referenties
                                     naar de RecyclerView en Adapter naar <code>null</code>, en verwijder de listener die
                                     je aan de DatabaseReference hebt toegevoegd (hint: <code>databaseReference.removeListener(ValueEventListener)</code>).</li>
